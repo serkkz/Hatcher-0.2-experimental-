@@ -8,7 +8,7 @@ bl_info = {"name": "Tools",
            "warning": "", 
            "wiki_url": "", 
            "tracker_url": "",
-           "category": "Panda3D_Tools"}
+           "category": "Panda3D"}
 import bpy
 
 
