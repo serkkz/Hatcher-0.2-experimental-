@@ -1,3 +1,3 @@
-# Hatcher-version-0.2 (experimental)
+# Hatcher 0.2 (experimental)
 
 No suitable for use
