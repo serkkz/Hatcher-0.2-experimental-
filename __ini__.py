@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-bl_info = {"name": "ToolsR", 
-           "description": "ToolsR", 
+bl_info = {"name": "Tools", 
+           "description": "Tools:Hatcher", 
            "author": "serg-kkz", 
            "version": (0, 1), 
            "blender": (2, 7, 6),
@@ -8,7 +8,7 @@ bl_info = {"name": "ToolsR",
            "warning": "", 
            "wiki_url": "", 
            "tracker_url": "",
-           "category": "Panda3DR"}
+           "category": "Panda3D Tools"}
 import bpy
 
 
