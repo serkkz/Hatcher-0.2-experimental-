@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 bl_info = {"name": "Tools", 
-           "description": "Tools:Hatcher", 
+           "description": "Tools", 
            "author": "serg-kkz", 
            "version": (0, 1), 
            "blender": (2, 7, 6),
