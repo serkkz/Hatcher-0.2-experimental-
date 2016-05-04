@@ -44,7 +44,7 @@ def register():
         print('properties_world.py copied to the backup directory')
 
         # Собираем адрес файла расположеного в папке аддона которым подменим  файл блендера properties_world.py
-        properties_world_mod = os.path.join(os.path.dirname(__file__), 'modules', 'properties_world.py')   
+        properties_world_mod = os.path.join(os.path.dirname(__file__), 'modules', 'modified_files', 'properties_world.py')   
         
         # Копируем properties_world.py и из папки адонна в блендер.
         shutil.copy(properties_world_mod, adress_bl_ui)
