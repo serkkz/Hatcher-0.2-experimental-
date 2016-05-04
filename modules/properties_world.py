@@ -14,7 +14,7 @@ class WorldButtonsPanel:
 
 class MATERIAL(WorldButtonsPanel, Panel):
     bl_label = "Materials and textures"
-    COMPAT_ENGINES = {'Panda3D:Hatcher'}
+    COMPAT_ENGINES = {'Panda3D'}
 
     def draw(self, context):
     
