@@ -15,9 +15,9 @@ import sys
 import os
 import shutil
 
-class CustomRenderEngine(bpy.types.RenderEngine):
-    bl_idname = "Panda3D:Hatcher"
-    bl_label = "Panda3D:Hatcher"
+class RenderPanda3D(bpy.types.RenderEngine):
+    bl_idname = "Panda3D"
+    bl_label = "Panda3D"
     bl_use_preview = True
 
     def render(self, scene):
@@ -76,17 +76,17 @@ def register():
         mod = sys.modules[mod_name]
         #print(mod.bl_info.get('name'))'''
 
-    bpy.utils.register_class(CustomRenderEngine)
+    bpy.utils.register_class(RenderPanda3D)
 
     from bl_ui import ( properties_render, properties_material,)
-    properties_render.RENDER_PT_render.COMPAT_ENGINES.add(CustomRenderEngine.bl_idname)
-    properties_material.MATERIAL_PT_preview.COMPAT_ENGINES.add(CustomRenderEngine.bl_idname)
+    properties_render.RENDER_PT_render.COMPAT_ENGINES.add(RenderPanda3D.bl_idname)
+    properties_material.MATERIAL_PT_preview.COMPAT_ENGINES.add(RenderPanda3D.bl_idname)
 
 def unregister():
 
 
-    bpy.utils.unregister_class(CustomRenderEngine)
+    bpy.utils.unregister_class(RenderPanda3D)
 
     from bl_ui import ( properties_render, properties_material,)
-    properties_render.RENDER_PT_render.COMPAT_ENGINES.remove(CustomRenderEngine.bl_idname)
-    properties_material.MATERIAL_PT_preview.COMPAT_ENGINES.remove(CustomRenderEngine.bl_idname)
+    properties_render.RENDER_PT_render.COMPAT_ENGINES.remove(RenderPanda3D.bl_idname)
+    properties_material.MATERIAL_PT_preview.COMPAT_ENGINES.remove(RenderPanda3D.bl_idname)
