@@ -15,66 +15,40 @@ import sys
 import os
 import shutil
 
-class RenderPanda3D(bpy.types.RenderEngine):
-    bl_idname = "Panda3D"
-    bl_label = "Panda3D"
-    bl_use_preview = True
+from .modules.panda3d_render import RenderPanda3D
 
-    def render(self, scene):
-        scale = scene.render.resolution_percentage / 100.0
-        self.size_x = int(scene.render.resolution_x * scale)
-        self.size_y = int(scene.render.resolution_y * scale)
+# Директория исходных файлов блендера
+adress_bl_ui = os.path.join(os.getcwd(), str(bpy.app.version[0])+'.'+str(bpy.app.version[1]), 'scripts', 'startup',  'bl_ui')  
 
-        if self.is_preview:
-            self.render_preview(scene)
-        else:
-            self.render_scene(scene)
+# Собираем адрес директории для резервных копий исходных файлов блендера
+adress_dir_backup = os.path.join(os.getcwd(), str(bpy.app.version[0])+'.'+str(bpy.app.version[1]), 'scripts', 'startup', 'bl_ui', 'backup')
 
-    def render_preview(self, scene):
-    
-        pixel_count = self.size_x * self.size_y
-        green_rect = [[0.0, 1.0, 0.0, 1.0]] * pixel_count
-        result = self.begin_result(0, 0, self.size_x, self.size_y)
-        layer = result.layers[0].passes["Combined"]
-        layer.rect = green_rect
-        self.end_result(result)
-
-    def render_scene(self, scene):
-    
-        pixel_count = self.size_x * self.size_y
-        blue_rect = [[0.0, 0.0, 1.0, 1.0]] * pixel_count
-        result = self.begin_result(0, 0, self.size_x, self.size_y)
-        layer = result.layers[0].passes["Combined"]
-        layer.rect = blue_rect
-        self.end_result(result)
+# Aдрес файла исходника блендера properties_world.py
+properties_world = os.path.join(os.getcwd(), str(bpy.app.version[0])+'.'+str(bpy.app.version[1]), 'scripts', 'startup',  'bl_ui', 'properties_world.py')    
 
 def register():
 
+    # Проверяем на существование директории.
+    if os.path.exists(adress_dir_backup):
+    
+        print('Directory backup exist')
+        
+    else:
 
-    # Нужно дописать копирования резервной копии properties_world.py, для востановления при отключении плагина
+        # Если её не оказалось то создаем
+        os.makedirs(adress_dir_backup, mode=0o777, exist_ok=False)
+        print('Create a directory backup')
+        
+        # Делаем копию файла properties_world.py и размещаем в директории резевного копирования.
+        shutil.copy(properties_world, adress_dir_backup)
+        print('properties_world.py copied to the backup directory')
 
-    # Получаем адрес файла исходника блендера properties_world.py
-    #adress_file = os.path.join(os.getcwd(), str(bpy.app.version[0])+'.'+str(bpy.app.version[1]), 'scripts', 'startup',  'bl_ui', 'properties_world.py')   
-
-    # Получаем адрес директории исходника блендера properties_world.py
-    adress_dir = os.path.join(os.getcwd(), str(bpy.app.version[0])+'.'+str(bpy.app.version[1]), 'scripts', 'startup',  'bl_ui')
-    
-    # Получаем адрес файла исходника в папке экспортера, которым подменим  файл блендера properties_world.py
-    adress_file = os.path.join(os.path.dirname(__file__), 'modules', 'properties_world.py')   
-
-    # Копируем файл
-    shutil.copy(adress_file, adress_dir)
-    
-    # Нужно дописать вывод о уведомлении о перезгрузки blendera
-    
-    
-    
-    '''context = bpy.context
-
-    for mod_name in context.user_preferences.addons.keys():
-    
-        mod = sys.modules[mod_name]
-        #print(mod.bl_info.get('name'))'''
+        # Собираем адрес файла расположеного в папке аддона которым подменим  файл блендера properties_world.py
+        properties_world_mod = os.path.join(os.path.dirname(__file__), 'modules', 'properties_world.py')   
+        
+        # Копируем properties_world.py и из папки адонна в блендер.
+        shutil.copy(properties_world_mod, adress_bl_ui)
+        print('Copy properties_world.py to the blender directory')
 
     bpy.utils.register_class(RenderPanda3D)
 
@@ -84,9 +58,33 @@ def register():
 
 def unregister():
 
+    # Проверяем на существование директории.
+    if os.path.exists(adress_dir_backup):
+    
+        # Получаем список всех сохраненых файлов
+        list_file_restore = os.listdir(path=adress_dir_backup)
+        
+        # Проходим по списку извлекая имена
+        for name in list_file_restore:
+
+            # Собираем полный адрес файлов расположенных в папке резевного копирования
+            full_adress = os.path.join(adress_dir_backup, name)
+            
+            # Делаем копию файла и размещаем в директории bl_ui.
+            shutil.copy(full_adress, adress_bl_ui)
+            #print (list_file_restore[name]))
+            
+        shutil.rmtree(adress_dir_backup)
+        print ('Remove directory' + adress_bl_ui)
+        
+    else:
+    
+        print('No backup directory')
 
     bpy.utils.unregister_class(RenderPanda3D)
 
     from bl_ui import ( properties_render, properties_material,)
     properties_render.RENDER_PT_render.COMPAT_ENGINES.remove(RenderPanda3D.bl_idname)
     properties_material.MATERIAL_PT_preview.COMPAT_ENGINES.remove(RenderPanda3D.bl_idname)
+    
+
